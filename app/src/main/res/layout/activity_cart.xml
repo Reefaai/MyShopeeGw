@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_screen">
+    android:background="@color/bg_screen"
+    android:orientation="vertical">
 
     <!-- Top Header -->
     <LinearLayout
         android:id="@+id/layoutCartHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:background="@color/bg_card"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -51,7 +51,6 @@
         android:id="@+id/dividerCartHeader"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/layoutCartHeader"
         android:background="@color/border_light" />
 
     <!-- Select All Bar -->
@@ -59,7 +58,6 @@
         android:id="@+id/layoutSelectAll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/dividerCartHeader"
         android:background="@color/bg_card"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -78,60 +76,62 @@
             android:textSize="13sp" />
     </LinearLayout>
 
-    <!-- Cart Items RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvCartItems"
+    <!-- Content Area: RecyclerView & Empty State -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/layoutCartBottomBar"
-        android:layout_below="@id/layoutSelectAll"
-        android:clipToPadding="false"
-        android:paddingVertical="8dp"
-        tools:listitem="@layout/item_cart_item" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <!-- Empty State -->
-    <LinearLayout
-        android:id="@+id/layoutCartEmpty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/layoutCartBottomBar"
-        android:layout_below="@id/layoutSelectAll"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="32dp"
-        android:visibility="gone">
+        <!-- Cart Items RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCartItems"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingVertical="8dp"
+            tools:listitem="@layout/item_cart_item" />
 
-        <ImageView
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:src="@drawable/ic_shopping_bag" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="sans-serif-bold"
-            android:text="Keranjang Belanja Kosong"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:fontFamily="sans-serif"
+        <!-- Empty State -->
+        <LinearLayout
+            android:id="@+id/layoutCartEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:text="Yuk cari barang impianmu dan tambahkan ke sini!"
-            android:textColor="@color/text_muted"
-            android:textSize="13sp" />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:padding="32dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:src="@drawable/ic_shopping_bag" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif-bold"
+                android:text="Keranjang Belanja Kosong"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="Yuk cari barang impianmu dan tambahkan ke sini!"
+                android:textColor="@color/text_muted"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </FrameLayout>
 
     <!-- Bottom Checkout Bar -->
     <LinearLayout
         android:id="@+id/layoutCartBottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="@color/bg_card"
         android:elevation="8dp"
         android:gravity="center_vertical"
@@ -172,4 +172,4 @@
             android:paddingHorizontal="24dp"
             android:text="Checkout (2)" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

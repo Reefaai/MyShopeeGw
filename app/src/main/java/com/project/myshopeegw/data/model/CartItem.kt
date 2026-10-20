@@ -18,7 +18,7 @@ data class CartItem(
     var quantity: Int = 1,
     @SerializedName("variant")
     val variant: String = "",
-    @SerializedName("is_selected")
+    @Transient
     var isSelected: Boolean = true
 ) : Serializable {
     val totalPrice: Long

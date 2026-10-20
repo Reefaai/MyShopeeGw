@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_screen">
+    android:background="@color/bg_screen"
+    android:orientation="vertical">
 
     <!-- Top Header -->
     <LinearLayout
         android:id="@+id/layoutTrackingHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:background="@color/bg_card"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -41,14 +41,14 @@
         android:id="@+id/dividerTrackingHeader"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/layoutTrackingHeader"
         android:background="@color/border_light" />
 
+    <!-- Scrollable Content Area -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/trackingScrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/layoutTrackingBottomBar"
-        android:layout_below="@id/dividerTrackingHeader"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:fillViewport="true">
 
         <LinearLayout
@@ -442,7 +442,6 @@
         android:id="@+id/layoutTrackingBottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="@color/bg_card"
         android:elevation="8dp"
         android:orientation="vertical"
@@ -455,4 +454,4 @@
             android:layout_height="wrap_content"
             android:text="Kembali ke Beranda" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

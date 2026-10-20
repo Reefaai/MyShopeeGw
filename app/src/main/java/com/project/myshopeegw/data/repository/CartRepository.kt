@@ -18,13 +18,19 @@ class CartRepository(private val context: Context) {
         return withContext(Dispatchers.IO) {
             try {
                 val response = api.getCart()
-                if (response.isSuccessful && response.body() != null) {
-                    Resource.Success(response.body()!!)
+                if (response.isSuccessful && !response.body().isNullOrEmpty()) {
+                    val supabaseItems = response.body()!!
+                    supabaseItems.forEach { item ->
+                        val local = MockDataProvider.cartItems.find { it.id == item.id }
+                        item.isSelected = local?.isSelected ?: true
+                    }
+                    MockDataProvider.cartItems.clear()
+                    MockDataProvider.cartItems.addAll(supabaseItems)
+                    Resource.Success(supabaseItems)
                 } else {
                     Resource.Success(MockDataProvider.cartItems.toList())
                 }
             } catch (e: Exception) {
-                // Fallback to in-memory active cart store
                 Resource.Success(MockDataProvider.cartItems.toList())
             }
         }
@@ -37,12 +43,12 @@ class CartRepository(private val context: Context) {
                     it.productId == product.id && it.variant == variant
                 }
 
-                val item = if (existing != null) {
+                val itemToSave = if (existing != null) {
                     existing.quantity += quantity
                     existing
                 } else {
                     val newItem = CartItem(
-                        id = "cart-" + UUID.randomUUID().toString().take(6),
+                        id = "cart-" + UUID.randomUUID().toString().take(8),
                         productId = product.id,
                         productName = product.name,
                         productImage = product.imageUrl,
@@ -55,11 +61,14 @@ class CartRepository(private val context: Context) {
                     newItem
                 }
 
+                // Push to live Supabase backend
                 try {
-                    api.addToCart(item)
-                } catch (ignored: Exception) {}
+                    api.addToCart(itemToSave)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
 
-                Resource.Success(item)
+                Resource.Success(itemToSave)
             } catch (e: Exception) {
                 Resource.Error(e.message ?: "Gagal menambahkan ke keranjang")
             }

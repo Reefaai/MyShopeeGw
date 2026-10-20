@@ -33,6 +33,11 @@ class CartActivity : AppCompatActivity() {
         observeViewModel()
     }
 
+    override fun onResume() {
+        super.onResume()
+        cartViewModel.loadCart()
+    }
+
     private fun setupRecyclerView() {
         // Operation 5: Ubah Jumlah Produk di Keranjang (Full CRUD)
         cartAdapter = CartAdapter(

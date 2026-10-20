@@ -49,6 +49,16 @@ class HomeFragment : Fragment() {
         setupListeners()
         observeViewModels()
         startFlashSaleCountdown()
+
+        // Fix smooth scrolling between SwipeRefreshLayout and NestedScrollView
+        binding.swipeRefreshHome.setOnChildScrollUpCallback { _, _ ->
+            binding.homeScrollView.canScrollVertically(-1)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        cartViewModel.loadCart()
     }
 
     private fun setupRecyclerViews() {
