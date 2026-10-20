@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Essentials -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+
+    <!-- ShopiKu Neo-Minimalist Sage & Black Metal Palette -->
+    <color name="color_primary">#050504</color>
+    <color name="color_on_primary">#FFFFFF</color>
+    <color name="color_primary_container">#CEE9BD</color>
+    <color name="color_on_primary_container">#0F2A1D</color>
+
+    <color name="color_secondary">#375534</color>
+    <color name="color_on_secondary">#FFFFFF</color>
+    <color name="color_secondary_container">#E3EED4</color>
+    <color name="color_on_secondary_container">#0F2A1D</color>
+
+    <!-- Surfaces & Backgrounds -->
+    <color name="bg_screen">#F9F7F6</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="bg_card_subtle">#F4F1EE</color>
+    <color name="bg_input">#FFFFFF</color>
+
+    <!-- Matcha & Sage Accents -->
+    <color name="accent_matcha">#CEE9BD</color>
+    <color name="accent_matcha_light">#EBF7E3</color>
+    <color name="accent_matcha_dark">#8FA87F</color>
+    <color name="accent_sage">#BCC5AD</color>
+    <color name="accent_warm">#E0D5CF</color>
+    <color name="accent_forest">#0F2A1D</color>
+
+    <!-- Functional & Alerts -->
+    <color name="accent_coral">#FF5722</color>
+    <color name="accent_coral_light">#FFEBE6</color>
+    <color name="star_gold">#FFB800</color>
+    <color name="status_green">#2E7D32</color>
+    <color name="status_green_light">#E8F5E9</color>
+    <color name="status_orange">#E65100</color>
+    <color name="status_orange_light">#FFF3E0</color>
+
+    <!-- Typography Colors -->
+    <color name="text_primary">#050504</color>
+    <color name="text_secondary">#5C5E58</color>
+    <color name="text_muted">#8C8E8A</color>
+    <color name="text_white">#FFFFFF</color>
+
+    <!-- Borders & Dividers -->
+    <color name="border_light">#EAE7E3</color>
+    <color name="divider_color">#F0ECE8</color>
+</resources>

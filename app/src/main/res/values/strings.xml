@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ShopiKu</string>
+    <string name="app_tagline">Belanja Modern, Bersih &amp; Terpercaya</string>
+    <string name="currency_symbol">Rp</string>
+    <string name="search_hint">Cari produk pilihanmu...</string>
+    <string name="add_to_cart">Tambah Keranjang</string>
+    <string name="buy_now">Beli Sekarang</string>
+    <string name="checkout">Checkout</string>
+    <string name="pay_now">Bayar Sekarang</string>
+</resources>
