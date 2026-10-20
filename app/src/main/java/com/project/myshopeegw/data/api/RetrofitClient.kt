@@ -11,6 +11,9 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
+    const val DEFAULT_SUPABASE_URL = "https://yyuiobkasslmvcvvzarn.supabase.co/"
+    const val DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5dWlvYmthc3NsbXZjdnZ6YXJuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0ODE0OTIsImV4cCI6MjEwODA1NzQ5Mn0.86nBOgRAsyPzHVotonF6BkDIghqWW68coN2bK8Tia-M"
+
     private var retrofit: Retrofit? = null
     private var currentBaseUrl: String = ""
     private var currentKey: String = ""
