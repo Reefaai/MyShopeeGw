@@ -50,7 +50,17 @@ ShopiKu features a comprehensive, 12-screen user journey covering every phase of
 
 ## 📸 Tangkapan Layar Aplikasi (Emulator Showcase)
 
-Berikut adalah dokumentasi tangkapan layar dari **12 layar utama ShopiKu** saat dijalankan pada emulator Android:
+<p align="center">
+  <img src="dokumentasi/mockup_12_layar_shopiku.png" alt="Bagan Alur 12 Layar Antarmuka ShopiKu" width="100%" />
+</p>
+
+<p align="center">
+  <em><strong>Gambar 4.1:</strong> Bagan Alur 12 Layar Antarmuka Desain Mobile Marketplace "ShopiKu" (Tersedia versi High-Resolution di <code>dokumentasi/mockup_12_layar_shopiku_highres.png</code>)</em>
+</p>
+
+<br />
+
+Berikut adalah rincian dokumentasi tangkapan layar dari masing-masing **12 layar utama ShopiKu** saat dijalankan pada emulator Android:
 
 ### 1. Onboarding & Autentikasi
 | 1. Splash Screen | 2. Login & Register | 3. Beranda (Home) |
