@@ -9,7 +9,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.project.myshopeegw.data.model.Product
 import com.project.myshopeegw.databinding.ActivityProductListBinding
 import com.project.myshopeegw.ui.adapter.CategoryAdapter
 import com.project.myshopeegw.ui.adapter.ProductGridAdapter
@@ -44,9 +43,7 @@ class ProductListActivity : AppCompatActivity() {
         setupListeners()
         observeViewModels()
 
-        if (initialCategoryId != "all") {
-            productViewModel.selectCategory(initialCategoryId)
-        }
+        productViewModel.selectCategory(initialCategoryId)
     }
 
     private fun setupRecyclerViews(initialCategory: String) {
@@ -61,6 +58,7 @@ class ProductListActivity : AppCompatActivity() {
 
         productViewModel.categories.observe(this) { categories ->
             categoryAdapter = CategoryAdapter(categories, isGridMode = false) { category ->
+                categoryAdapter.setSelectedCategory(category.id)
                 productViewModel.selectCategory(category.id)
             }
             categoryAdapter.setSelectedCategory(initialCategory)
@@ -92,17 +90,28 @@ class ProductListActivity : AppCompatActivity() {
 
     private fun observeViewModels() {
         productViewModel.products.observe(this) { resource ->
-            if (resource is Resource.Success) {
-                val list = resource.data ?: emptyList()
-                productAdapter.submitList(list)
-                if (list.isEmpty()) {
-                    binding.layoutEmptyState.visibility = View.VISIBLE
-                    binding.rvProductList.visibility = View.GONE
-                    binding.tvResultCount.text = "0 produk ditemukan"
-                } else {
-                    binding.layoutEmptyState.visibility = View.GONE
-                    binding.rvProductList.visibility = View.VISIBLE
-                    binding.tvResultCount.text = "Menampilkan ${list.size} produk pilihan"
+            when (resource) {
+                is Resource.Loading -> {
+                    binding.tvResultCount.text = "Memuat produk..."
+                }
+                is Resource.Success -> {
+                    val list = resource.data ?: emptyList()
+                    productAdapter.submitList(list)
+                    if (list.isEmpty()) {
+                        binding.layoutEmptyState.visibility = View.VISIBLE
+                        binding.rvProductList.visibility = View.GONE
+                        binding.tvResultCount.text = "0 produk ditemukan"
+                    } else {
+                        binding.layoutEmptyState.visibility = View.GONE
+                        binding.rvProductList.visibility = View.VISIBLE
+                        val catLabel = if (productViewModel.currentCategory != "all") {
+                            "kategori ${productViewModel.currentCategory}"
+                        } else "semua kategori"
+                        binding.tvResultCount.text = "Menampilkan ${list.size} produk ($catLabel)"
+                    }
+                }
+                is Resource.Error -> {
+                    binding.tvResultCount.text = "Gagal memuat produk"
                 }
             }
         }
@@ -116,5 +125,10 @@ class ProductListActivity : AppCompatActivity() {
                 binding.tvListCartBadge.visibility = View.GONE
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        cartViewModel.loadCart()
     }
 }

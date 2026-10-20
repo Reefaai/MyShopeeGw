@@ -11,6 +11,7 @@ import com.project.myshopeegw.data.model.Product
 import com.project.myshopeegw.data.model.Review
 import com.project.myshopeegw.data.repository.ProductRepository
 import com.project.myshopeegw.utils.Resource
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class ProductViewModel(application: Application) : AndroidViewModel(application) {
@@ -29,8 +30,12 @@ class ProductViewModel(application: Application) : AndroidViewModel(application)
     private val _reviews = MutableLiveData<List<Review>>()
     val reviews: LiveData<List<Review>> = _reviews
 
-    private var currentCategory: String = "all"
-    private var currentSearchQuery: String = ""
+    var currentCategory: String = "all"
+        private set
+    var currentSearchQuery: String = ""
+        private set
+
+    private var loadJob: Job? = null
 
     init {
         _categories.value = MockDataProvider.categories
@@ -42,8 +47,10 @@ class ProductViewModel(application: Application) : AndroidViewModel(application)
         currentSearchQuery = searchQuery ?: ""
         currentCategory = category ?: "all"
 
-        _products.value = Resource.Loading()
-        viewModelScope.launch {
+        // Cancel previous request to eliminate coroutine race conditions
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
+            _products.value = Resource.Loading()
             val result = repository.getProducts(currentSearchQuery, currentCategory)
             _products.value = result
         }

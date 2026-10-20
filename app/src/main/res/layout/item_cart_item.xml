@@ -19,12 +19,14 @@
         android:orientation="horizontal"
         android:padding="12dp">
 
-        <!-- Checkbox -->
+        <!-- Custom Styled Checkbox -->
         <CheckBox
             android:id="@+id/cbSelect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/color_primary"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:button="@drawable/selector_checkbox_custom"
+            app:buttonCompat="@drawable/selector_checkbox_custom"
             android:checked="true" />
 
         <!-- Product Thumbnail -->
@@ -32,7 +34,7 @@
             android:id="@+id/imgCartProduct"
             android:layout_width="72dp"
             android:layout_height="72dp"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="8dp"
             android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
             tools:srcCompat="@drawable/ic_launcher_background" />
@@ -67,7 +69,7 @@
                 android:paddingVertical="2dp"
                 android:textColor="@color/accent_forest"
                 android:textSize="10sp"
-                tools:text="Varian: Hitam Doff" />
+                tools:text="Variasi: Hitam Doff" />
 
             <TextView
                 android:id="@+id/tvCartPrice"
@@ -106,15 +108,15 @@
 
                 <ImageButton
                     android:id="@+id/btnDecrease"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Kurang"
                     android:src="@drawable/ic_remove" />
 
                 <TextView
                     android:id="@+id/tvQuantity"
-                    android:layout_width="26dp"
+                    android:layout_width="28dp"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-bold"
                     android:gravity="center"
@@ -124,8 +126,8 @@
 
                 <ImageButton
                     android:id="@+id/btnIncrease"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Tambah"
                     android:src="@drawable/ic_add" />

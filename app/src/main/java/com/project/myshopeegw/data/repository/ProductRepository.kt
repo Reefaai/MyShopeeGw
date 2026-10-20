@@ -15,25 +15,33 @@ class ProductRepository(private val context: Context) {
     suspend fun getProducts(searchQuery: String? = null, category: String? = null): Resource<List<Product>> {
         return withContext(Dispatchers.IO) {
             try {
-                // Try fetching from live Supabase API
-                val response = if (!searchQuery.isNullOrBlank()) {
-                    api.getProducts("ilike.*$searchQuery*")
-                } else {
-                    api.getProducts()
-                }
+                // Fetch from live Supabase API
+                val response = api.getProducts()
 
                 if (response.isSuccessful && !response.body().isNullOrEmpty()) {
                     var list = response.body()!!
+
+                    // Filter Category
                     if (!category.isNullOrBlank() && category != "all") {
-                        list = list.filter { it.category.equals(category, ignoreCase = true) }
+                        list = list.filter { it.category.trim().equals(category.trim(), ignoreCase = true) }
                     }
+
+                    // Filter Search Query
+                    if (!searchQuery.isNullOrBlank()) {
+                        val q = searchQuery.trim().lowercase()
+                        list = list.filter {
+                            it.name.lowercase().contains(q) ||
+                                    it.description.lowercase().contains(q) ||
+                                    it.category.lowercase().contains(q)
+                        }
+                    }
+
                     Resource.Success(list)
                 } else {
-                    // Fallback to rich MockDataProvider (multi-category + Cirebon products)
+                    // Fallback to local products
                     filterLocalProducts(searchQuery, category)
                 }
             } catch (e: Exception) {
-                // Elegant Error Handling as required in scoring rubric (10%)
                 filterLocalProducts(searchQuery, category)
             }
         }
@@ -43,7 +51,7 @@ class ProductRepository(private val context: Context) {
         var filtered = MockDataProvider.products.toList()
 
         if (!category.isNullOrBlank() && category != "all") {
-            filtered = filtered.filter { it.category.equals(category, ignoreCase = true) }
+            filtered = filtered.filter { it.category.trim().equals(category.trim(), ignoreCase = true) }
         }
 
         if (!searchQuery.isNullOrBlank()) {

@@ -11,10 +11,10 @@ object MockDataProvider {
     val categories = listOf(
         Category("all", "Semua", R.drawable.ic_category, 10),
         Category("elektronik", "Elektronik", R.drawable.ic_gadget, 4),
-        Category("fashion", "Fashion", R.drawable.ic_fashion, 2),
+        Category("fashion", "Fashion", R.drawable.ic_fashion, 1),
         Category("sepatu", "Sepatu", R.drawable.ic_shoes, 1),
         Category("cirebon", "Khas Cirebon", R.drawable.ic_cirebon, 3),
-        Category("hobi", "Hobi & Rumah", R.drawable.ic_hobby, 2)
+        Category("hobi", "Hobi & Rumah", R.drawable.ic_hobby, 1)
     )
 
     private val initialProducts = listOf(

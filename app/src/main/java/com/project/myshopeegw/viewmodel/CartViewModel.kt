@@ -32,11 +32,11 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun loadCart() {
-        _cartState.value = Resource.Loading()
         viewModelScope.launch {
             val result = repository.getCartItems()
-            _cartState.value = result
-            calculateTotals(result.data ?: emptyList())
+            val list = result.data ?: emptyList()
+            _cartState.value = Resource.Success(list)
+            calculateTotals(list)
         }
     }
 
@@ -53,44 +53,85 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun increaseQuantity(item: CartItem) {
+        val currentList = _cartState.value?.data ?: emptyList()
+        val newQty = item.quantity + 1
+
+        // 1. Instantly update UI with a fresh immutable copy
+        val updatedList = currentList.map {
+            if (it.id == item.id) it.copy(quantity = newQty) else it
+        }
+        _cartState.value = Resource.Success(updatedList)
+        calculateTotals(updatedList)
+
+        // 2. Persist to repository and Supabase
         viewModelScope.launch {
-            repository.updateQuantity(item.id, item.quantity + 1)
-            loadCart()
+            repository.updateQuantity(item.id, newQty)
         }
     }
 
     fun decreaseQuantity(item: CartItem) {
-        viewModelScope.launch {
-            if (item.quantity > 1) {
-                repository.updateQuantity(item.id, item.quantity - 1)
-            } else {
-                repository.deleteCartItem(item.id)
-                _actionMessage.value = "${item.productName} dihapus dari keranjang"
+        val currentList = _cartState.value?.data ?: emptyList()
+        val newQty = item.quantity - 1
+
+        if (newQty > 0) {
+            // 1. Instantly update UI with a fresh immutable copy
+            val updatedList = currentList.map {
+                if (it.id == item.id) it.copy(quantity = newQty) else it
             }
-            loadCart()
+            _cartState.value = Resource.Success(updatedList)
+            calculateTotals(updatedList)
+
+            // 2. Persist in background
+            viewModelScope.launch {
+                repository.updateQuantity(item.id, newQty)
+            }
+        } else {
+            // Delete item
+            val updatedList = currentList.filter { it.id != item.id }
+            _cartState.value = Resource.Success(updatedList)
+            calculateTotals(updatedList)
+            _actionMessage.value = "${item.productName} dihapus dari keranjang"
+
+            viewModelScope.launch {
+                repository.deleteCartItem(item.id)
+            }
         }
     }
 
     fun deleteItem(item: CartItem) {
+        val currentList = _cartState.value?.data ?: emptyList()
+        val updatedList = currentList.filter { it.id != item.id }
+        _cartState.value = Resource.Success(updatedList)
+        calculateTotals(updatedList)
+        _actionMessage.value = "${item.productName} dihapus dari keranjang"
+
         viewModelScope.launch {
             repository.deleteCartItem(item.id)
-            _actionMessage.value = "${item.productName} dihapus dari keranjang"
-            loadCart()
         }
     }
 
     fun toggleSelect(item: CartItem, isSelected: Boolean) {
         repository.toggleSelect(item.id, isSelected)
         val currentList = _cartState.value?.data ?: emptyList()
-        calculateTotals(currentList)
+        val updatedList = currentList.map {
+            if (it.id == item.id) {
+                it.isSelected = isSelected
+                it.copy()
+            } else it
+        }
+        _cartState.value = Resource.Success(updatedList)
+        calculateTotals(updatedList)
     }
 
     fun toggleSelectAll(isSelected: Boolean) {
         repository.toggleSelectAll(isSelected)
         val currentList = _cartState.value?.data ?: emptyList()
-        currentList.forEach { it.isSelected = isSelected }
-        calculateTotals(currentList)
-        _cartState.value = Resource.Success(currentList)
+        val updatedList = currentList.map {
+            it.isSelected = isSelected
+            it.copy()
+        }
+        _cartState.value = Resource.Success(updatedList)
+        calculateTotals(updatedList)
     }
 
     private fun calculateTotals(items: List<CartItem>) {

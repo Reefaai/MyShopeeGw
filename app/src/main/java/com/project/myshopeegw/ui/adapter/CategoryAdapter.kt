@@ -82,7 +82,7 @@ class CategoryAdapter(
         fun bind(category: Category) {
             binding.tvCategoryGridName.text = category.name
             binding.imgCategoryGridIcon.setImageResource(category.iconRes)
-            binding.tvCategoryGridCount.text = "${category.itemCount * 25}+ Produk"
+            binding.tvCategoryGridCount.text = "${category.itemCount} Produk"
 
             binding.cardCategoryGrid.setOnClickListener {
                 onCategoryClick(category)

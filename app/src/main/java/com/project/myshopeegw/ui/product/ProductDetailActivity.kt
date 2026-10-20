@@ -1,6 +1,7 @@
 package com.project.myshopeegw.ui.product
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.View
@@ -74,22 +75,62 @@ class ProductDetailActivity : AppCompatActivity() {
             .placeholder(R.drawable.bg_search_bar)
             .into(binding.imgDetailMain)
 
-        // Setup Variant Chips
+        // Setup Variant Chips with vibrant visual selection states
+        binding.chipGroupVariants.isSingleSelection = true
+        binding.chipGroupVariants.isSelectionRequired = true
         binding.chipGroupVariants.removeAllViews()
+
         val variants = if (p.variants.isNotEmpty()) p.variants else listOf("Default")
         selectedVariant = variants.first()
 
+        val bgStateList = ColorStateList(
+            arrayOf(
+                intArrayOf(android.R.attr.state_checked),
+                intArrayOf(-android.R.attr.state_checked)
+            ),
+            intArrayOf(
+                ContextCompat.getColor(this, R.color.accent_matcha),
+                ContextCompat.getColor(this, R.color.bg_card)
+            )
+        )
+
+        val strokeStateList = ColorStateList(
+            arrayOf(
+                intArrayOf(android.R.attr.state_checked),
+                intArrayOf(-android.R.attr.state_checked)
+            ),
+            intArrayOf(
+                ContextCompat.getColor(this, R.color.color_primary),
+                ContextCompat.getColor(this, R.color.border_light)
+            )
+        )
+
+        val textStateList = ColorStateList(
+            arrayOf(
+                intArrayOf(android.R.attr.state_checked),
+                intArrayOf(-android.R.attr.state_checked)
+            ),
+            intArrayOf(
+                ContextCompat.getColor(this, R.color.color_primary),
+                ContextCompat.getColor(this, R.color.text_secondary)
+            )
+        )
+
         variants.forEachIndexed { index, variantName ->
             val chip = Chip(this).apply {
+                id = View.generateViewId()
                 text = variantName
                 isCheckable = true
                 isChecked = index == 0
-                setChipBackgroundColorResource(R.color.bg_card)
-                chipStrokeColor = ContextCompat.getColorStateList(this@ProductDetailActivity, R.color.border_light)
-                chipStrokeWidth = 2f
+                chipBackgroundColor = bgStateList
+                chipStrokeColor = strokeStateList
+                chipStrokeWidth = 3f
+                setTextColor(textStateList)
+
                 setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) {
                         selectedVariant = variantName
+                        Toast.makeText(this@ProductDetailActivity, "Varian dipilih: $variantName", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -146,5 +187,10 @@ class ProductDetailActivity : AppCompatActivity() {
                 binding.tvDetailCartBadge.visibility = View.GONE
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        cartViewModel.loadCart()
     }
 }

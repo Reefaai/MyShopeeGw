@@ -37,9 +37,9 @@ class CartAdapter(
             binding.tvCartPrice.text = CurrencyHelper.formatRupiah(item.price)
             binding.tvQuantity.text = item.quantity.toString()
 
-            binding.cbSelect.setOnCheckedChangeListener(null)
             binding.cbSelect.isChecked = item.isSelected
-            binding.cbSelect.setOnCheckedChangeListener { _, isChecked ->
+            binding.cbSelect.setOnClickListener {
+                val isChecked = binding.cbSelect.isChecked
                 item.isSelected = isChecked
                 onToggleSelect(item, isChecked)
             }
@@ -66,6 +66,10 @@ class CartAdapter(
 
     companion object DiffCallback : DiffUtil.ItemCallback<CartItem>() {
         override fun areItemsTheSame(oldItem: CartItem, newItem: CartItem): Boolean = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: CartItem, newItem: CartItem): Boolean = oldItem == newItem
+        override fun areContentsTheSame(oldItem: CartItem, newItem: CartItem): Boolean =
+            oldItem.quantity == newItem.quantity &&
+                    oldItem.isSelected == newItem.isSelected &&
+                    oldItem.price == newItem.price &&
+                    oldItem.variant == newItem.variant
     }
 }
