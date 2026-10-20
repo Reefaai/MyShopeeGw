@@ -94,4 +94,11 @@ interface SupabaseApiService {
     suspend fun createOrder(
         @Body order: Map<String, Any>
     ): Response<List<Map<String, Any>>>
+
+    @Headers("Prefer: return=representation")
+    @PATCH("rest/v1/orders")
+    suspend fun updateOrder(
+        @Query("id") idFilter: String, // eq.{id}
+        @Body body: Map<String, Any>
+    ): Response<List<Map<String, Any>>>
 }

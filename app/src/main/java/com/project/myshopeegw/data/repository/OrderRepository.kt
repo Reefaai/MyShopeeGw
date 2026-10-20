@@ -14,6 +14,8 @@ import java.util.UUID
 
 class OrderRepository(private val context: Context) {
 
+    private val api = com.project.myshopeegw.data.api.RetrofitClient.getSupabaseService(context)
+
     companion object {
         val ordersList = mutableListOf<Order>()
         var lastCreatedOrder: Order? = null
@@ -42,6 +44,27 @@ class OrderRepository(private val context: Context) {
                 createdAt = dateStr
             )
 
+            // Push to Supabase Cloud Database
+            try {
+                val orderMap = mapOf<String, Any>(
+                    "id" to newOrder.id,
+                    "order_number" to newOrder.orderNumber,
+                    "shipping_address" to newOrder.shippingAddress,
+                    "shipping_city" to newOrder.shippingCity,
+                    "shipping_type" to newOrder.shippingType,
+                    "shipping_cost" to newOrder.shippingCost,
+                    "subtotal" to newOrder.subtotal,
+                    "total_amount" to newOrder.totalAmount,
+                    "va_number" to newOrder.vaNumber,
+                    "payment_status" to newOrder.paymentStatus,
+                    "tracking_status" to newOrder.trackingStatus,
+                    "courier_resi" to newOrder.courierResi
+                )
+                api.createOrder(orderMap)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
             ordersList.add(0, newOrder)
             lastCreatedOrder = newOrder
 
@@ -55,6 +78,20 @@ class OrderRepository(private val context: Context) {
             if (order != null) {
                 order.paymentStatus = "PAID"
                 order.trackingStatus = "DIKEMAS"
+
+                // Update status in Supabase Cloud
+                try {
+                    api.updateOrder(
+                        "eq.${order.id}",
+                        mapOf(
+                            "payment_status" to "PAID",
+                            "tracking_status" to "DIKEMAS"
+                        )
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
                 Resource.Success(
                     PaymentResponse(
                         success = true,
