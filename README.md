@@ -1,10 +1,17 @@
 # ShopiKu — Modern Android E-Commerce & Marketplace Application
 
+[![Release](https://img.shields.io/github/v/release/Reefaai/MyShopeeGw?color=blue&label=Latest%20Release)](https://github.com/Reefaai/MyShopeeGw/releases/tag/v1.0.0)
 [![Kotlin](https://img.shields.io/badge/Language-Kotlin%201.9+-7F52FF.svg?style=flat&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![Platform](https://img.shields.io/badge/Platform-Android-3DDC84.svg?style=flat&logo=android&logoColor=white)](https://developer.android.com/)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20MVVM-blue.svg?style=flat)]()
 [![Backend](https://img.shields.io/badge/Backend-Supabase%20PostgREST-3ECF8E.svg?style=flat&logo=supabase&logoColor=white)](https://supabase.com/)
 [![Design](https://img.shields.io/badge/UI%2FUX-Neo--Minimalist-050504.svg?style=flat)]()
+
+<p align="left">
+  <a href="https://github.com/Reefaai/MyShopeeGw/releases/download/v1.0.0/ShopiKu-v1.0.0.apk">
+    <img src="https://img.shields.io/badge/Download%20APK-ShopiKu--v1.0.0.apk-2ea44f?style=for-the-badge&logo=android&logoColor=white" alt="Download APK" />
+  </a>
+</p>
 
 **ShopiKu** is a production-grade, native Android e-commerce application developed in Kotlin. Inspired by the functional depth of modern marketplace ecosystems, ShopiKu elevates mobile shopping with a clean **Neo-Minimalist design language** (Sage Green & Deep Charcoal Metal), seamless cloud database synchronization via **Supabase PostgREST**, an instant-search product catalog, full-fledged cart CRUD with reactive price calculation, a multi-channel sandbox payment gateway, and end-to-end order tracking.
 
@@ -140,16 +147,21 @@ app/src/main/
 
 ## ⚡ Getting Started & Setup
 
+### 📲 Direct APK Download (Siap Pakai)
+Bagi pengguna atau penguji yang ingin langsung mencoba aplikasi tanpa perlu meng-compile dari source code:
+* 📥 **[Download ShopiKu-v1.0.0.apk](https://github.com/Reefaai/MyShopeeGw/releases/download/v1.0.0/ShopiKu-v1.0.0.apk)** (~7.0 MB)
+* 🏷️ **[Halaman Rilis Resmi GitHub (v1.0.0)](https://github.com/Reefaai/MyShopeeGw/releases/tag/v1.0.0)**
+
 ### Prerequisites
 * Android Studio Iguana / Jellyfish / Ladybug or newer
 * JDK 17 or JDK 21 (bundled JBR recommended)
 * Android SDK Platform 34 (Minimum SDK: 24, Target SDK: 34)
 
-### Clone & Build
+### Clone & Build dari Source Code
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/myshopee-android.git
-cd myshopee-android
+git clone https://github.com/Reefaai/MyShopeeGw.git
+cd MyShopeeGw
 
 # Build Debug APK using Gradle
 ./gradlew assembleDebug
