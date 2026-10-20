@@ -120,11 +120,11 @@ class ProfileFragment : Fragment() {
 
         val etUrl = EditText(requireContext()).apply {
             hint = "Supabase Project URL"
-            setText("https://xyzcompany.supabase.co/")
+            setText(prefManager.supabaseUrl)
         }
         val etKey = EditText(requireContext()).apply {
             hint = "Supabase Anon Key"
-            setText("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
+            setText(prefManager.supabaseKey)
         }
 
         layout.addView(etUrl)
@@ -135,7 +135,11 @@ class ProfileFragment : Fragment() {
             .setMessage("Pengaturan endpoint REST API Live Backend untuk penilaian UAS:")
             .setView(layout)
             .setPositiveButton("Simpan & Tes Koneksi") { _, _ ->
-                Toast.makeText(requireContext(), "Konfigurasi Supabase tersimpan!", Toast.LENGTH_SHORT).show()
+                val newUrl = etUrl.text.toString().trim()
+                val newKey = etKey.text.toString().trim()
+                if (newUrl.isNotEmpty()) prefManager.supabaseUrl = newUrl
+                if (newKey.isNotEmpty()) prefManager.supabaseKey = newKey
+                Toast.makeText(requireContext(), "Konfigurasi Supabase berhasil disimpan!", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Tutup", null)
             .show()

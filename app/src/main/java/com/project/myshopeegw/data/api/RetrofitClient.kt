@@ -11,19 +11,18 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-    // Default Supabase Demo Project URL & Key (Mahasiswa bisa menggantinya di menu Profil / PrefManager)
-    const val DEFAULT_SUPABASE_URL = "https://xyzcompany.supabase.co/"
-    const val DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummy_anon_key_for_offline_fallback"
-
     private var retrofit: Retrofit? = null
     private var currentBaseUrl: String = ""
+    private var currentKey: String = ""
 
     fun getSupabaseService(context: Context): SupabaseApiService {
         val pref = PrefManager(context)
-        val baseUrl = ensureTrailingSlash(pref.userEmail.let { DEFAULT_SUPABASE_URL })
+        val baseUrl = ensureTrailingSlash(pref.supabaseUrl)
+        val apiKey = pref.supabaseKey
 
-        if (retrofit == null || currentBaseUrl != baseUrl) {
+        if (retrofit == null || currentBaseUrl != baseUrl || currentKey != apiKey) {
             currentBaseUrl = baseUrl
+            currentKey = apiKey
 
             val loggingInterceptor = HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
@@ -32,8 +31,8 @@ object RetrofitClient {
             val authInterceptor = Interceptor { chain ->
                 val originalRequest = chain.request()
                 val requestBuilder = originalRequest.newBuilder()
-                    .header("apikey", DEFAULT_SUPABASE_KEY)
-                    .header("Authorization", "Bearer $DEFAULT_SUPABASE_KEY")
+                    .header("apikey", apiKey)
+                    .header("Authorization", "Bearer $apiKey")
                     .header("Content-Type", "application/json")
                 chain.proceed(requestBuilder.build())
             }

@@ -14,6 +14,9 @@ class PrefManager(context: Context) {
         private const val KEY_USER_PHONE = "user_phone"
         private const val KEY_SUPABASE_URL = "supabase_url"
         private const val KEY_SUPABASE_KEY = "supabase_key"
+
+        const val DEFAULT_SUPABASE_URL = "https://yyulobkasslmvcvvzarn.supabase.co/"
+        const val DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummy_anon_key_for_offline_fallback"
     }
 
     var isLoggedIn: Boolean
@@ -36,6 +39,14 @@ class PrefManager(context: Context) {
         get() = pref.getString(KEY_USER_ADDRESS, "Jl. Perjuangan No. 10B, Karyamulya, Kec. Kesambi, Kota Cirebon, Jawa Barat 45131")
             ?: "Jl. Perjuangan No. 10B, Karyamulya, Kec. Kesambi, Kota Cirebon, Jawa Barat 45131"
         set(value) = pref.edit().putString(KEY_USER_ADDRESS, value).apply()
+
+    var supabaseUrl: String
+        get() = pref.getString(KEY_SUPABASE_URL, DEFAULT_SUPABASE_URL) ?: DEFAULT_SUPABASE_URL
+        set(value) = pref.edit().putString(KEY_SUPABASE_URL, value).apply()
+
+    var supabaseKey: String
+        get() = pref.getString(KEY_SUPABASE_KEY, DEFAULT_SUPABASE_KEY) ?: DEFAULT_SUPABASE_KEY
+        set(value) = pref.edit().putString(KEY_SUPABASE_KEY, value).apply()
 
     fun logout() {
         pref.edit().clear().apply()
