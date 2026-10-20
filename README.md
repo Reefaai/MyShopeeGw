@@ -55,36 +55,8 @@ ShopiKu features a comprehensive, 12-screen user journey covering every phase of
 </p>
 
 <p align="center">
-  <em><strong>Gambar 4.1:</strong> Bagan Alur 12 Layar Antarmuka Desain Mobile Marketplace "ShopiKu" (Tersedia versi High-Resolution di <code>dokumentasi/mockup_12_layar_shopiku_highres.png</code>)</em>
+  <em><strong>Gambar 4.1:</strong> Bagan Alur 12 Layar Antarmuka Desain Mobile Marketplace "ShopiKu"</em>
 </p>
-
-<br />
-
-Berikut adalah rincian dokumentasi tangkapan layar dari masing-masing **12 layar utama ShopiKu** saat dijalankan pada emulator Android:
-
-### 1. Onboarding & Autentikasi
-| 1. Splash Screen | 2. Login & Register | 3. Beranda (Home) |
-|:---:|:---:|:---:|
-| <img src="dokumentasi/Splash_Screen.png" width="260" alt="Splash Screen" /> | <img src="dokumentasi/Login_Register.png" width="260" alt="Login & Register" /> | <img src="dokumentasi/Beranda.png" width="260" alt="Beranda" /> |
-| *Branding visual & inisialisasi sesi* | *Tab Masuk / Registrasi & validasi* | *Dashboard, saldo wallet, & flash sale* |
-
-### 2. Eksplorasi & Katalog Produk
-| 4. Kategori Produk | 5. Daftar Produk & Pencarian | 6. Detail Produk |
-|:---:|:---:|:---:|
-| <img src="dokumentasi/Kategori_Produk.png" width="260" alt="Kategori Produk" /> | <img src="dokumentasi/Daftar_Produk.png" width="260" alt="Daftar Produk" /> | <img src="dokumentasi/Detail_produk.png" width="260" alt="Detail Produk" /> |
-| *Grid kategori & counter jumlah produk* | *Katalog 2 kolom & live character search* | *Pilihan varian interaktif & rincian produk* |
-
-### 3. Keranjang & Pembelian
-| 7. Keranjang Belanja | 8. Checkout Pesanan | 9. Pembayaran Sandbox |
-|:---:|:---:|:---:|
-| <img src="dokumentasi/Keranjang_Belanja.png" width="260" alt="Keranjang Belanja" /> | <img src="dokumentasi/Checkout.png" width="260" alt="Checkout Pesanan" /> | <img src="dokumentasi/Pembayaran.png" width="260" alt="Pembayaran Sandbox" /> |
-| *Full CRUD kuantitas & kalkulasi harga instan* | *Opsi kurir, alamat, & pemilihan metode bayar* | *Multi-channel payment & countdown timer* |
-
-### 4. Pelacakan, Profil, & Ulasan
-| 10. Tracking Pesanan | 11. Profil Akun | 12. Ulasan Produk |
-|:---:|:---:|:---:|
-| <img src="dokumentasi/Tracking_Pesanan.png" width="260" alt="Tracking Pesanan" /> | <img src="dokumentasi/Profil_Akun.png" width="260" alt="Profil Akun" /> | <img src="dokumentasi/Ulasan_Produk.png" width="260" alt="Ulasan Produk" /> |
-| *Visual stepper timeline pelacakan paket* | *Data akun & integrasi Supabase cloud* | *Rating agregat 5-bintang & testimoni ulasan* |
 
 ---
 
