@@ -221,9 +221,13 @@
 
             <!-- Metode Pembayaran Card -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPaymentMethod"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
                 app:cardBackgroundColor="@color/bg_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
@@ -238,6 +242,7 @@
                     android:padding="16dp">
 
                     <ImageView
+                        android:id="@+id/imgPaymentIcon"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
                         android:src="@drawable/ic_credit_card" />
@@ -258,14 +263,24 @@
                             android:textSize="13sp" />
 
                         <TextView
+                            android:id="@+id/tvPaymentMethodName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:fontFamily="sans-serif"
+                            android:fontFamily="sans-serif-medium"
                             android:text="BCA Virtual Account (VA: 123 456 7890)"
                             android:textColor="@color/accent_forest"
-                            android:textSize="11sp" />
+                            android:textSize="12sp" />
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/btnChangePaymentMethod"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-bold"
+                        android:text="Ubah"
+                        android:textColor="@color/accent_forest"
+                        android:textSize="12sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

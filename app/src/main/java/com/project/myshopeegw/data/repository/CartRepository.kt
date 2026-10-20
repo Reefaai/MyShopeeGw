@@ -18,8 +18,8 @@ class CartRepository(private val context: Context) {
         return withContext(Dispatchers.IO) {
             try {
                 val response = api.getCart()
-                if (response.isSuccessful && !response.body().isNullOrEmpty()) {
-                    val supabaseItems = response.body()!!
+                if (response.isSuccessful) {
+                    val supabaseItems = response.body() ?: emptyList()
                     supabaseItems.forEach { item ->
                         val local = MockDataProvider.cartItems.find { it.id == item.id }
                         item.isSelected = local?.isSelected ?: true
@@ -116,7 +116,44 @@ class CartRepository(private val context: Context) {
         MockDataProvider.cartItems.forEach { it.isSelected = isSelected }
     }
 
-    fun clearSelectedItems(): List<CartItem> {
+    suspend fun removeItems(items: List<CartItem>): Boolean {
+        return withContext(Dispatchers.IO) {
+            val idsToRemove = items.map { it.id }.filter { it.isNotBlank() }.toMutableSet()
+            val productKeysToRemove = items.map { "${it.productId}_${it.variant}" }.toSet()
+
+            // 1. Match local items
+            val matchingLocal = MockDataProvider.cartItems.filter {
+                it.id in idsToRemove || "${it.productId}_${it.variant}" in productKeysToRemove
+            }
+            matchingLocal.forEach { idsToRemove.add(it.id) }
+
+            // Remove from memory
+            MockDataProvider.cartItems.removeAll(matchingLocal)
+            MockDataProvider.cartItems.removeAll { it.id in idsToRemove }
+
+            // 2. Delete from Supabase cloud database
+            for (id in idsToRemove) {
+                if (id.isNotBlank() && !id.startsWith("direct-")) {
+                    try {
+                        api.deleteCartItem("eq.$id")
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            true
+        }
+    }
+
+    suspend fun clearSelectedItems(): List<CartItem> {
+        return withContext(Dispatchers.IO) {
+            val selected = MockDataProvider.cartItems.filter { it.isSelected }
+            removeItems(selected)
+            selected
+        }
+    }
+
+    fun clearSelectedItemsSync(): List<CartItem> {
         val selected = MockDataProvider.cartItems.filter { it.isSelected }
         MockDataProvider.cartItems.removeAll { it.isSelected }
         return selected

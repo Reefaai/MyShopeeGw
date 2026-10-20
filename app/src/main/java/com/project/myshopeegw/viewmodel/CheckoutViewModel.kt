@@ -5,9 +5,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.project.myshopeegw.data.api.PaymentMethodProvider
 import com.project.myshopeegw.data.model.CartItem
 import com.project.myshopeegw.data.model.CheckoutPayload
 import com.project.myshopeegw.data.model.Order
+import com.project.myshopeegw.data.model.PaymentMethod
 import com.project.myshopeegw.data.model.PaymentResponse
 import com.project.myshopeegw.data.repository.CartRepository
 import com.project.myshopeegw.data.repository.OrderRepository
@@ -36,12 +38,18 @@ class CheckoutViewModel(application: Application) : AndroidViewModel(application
     val subtotal = MutableLiveData(0L)
     val totalAmount = MutableLiveData(0L)
 
+    val selectedPaymentMethod = MutableLiveData<PaymentMethod>(PaymentMethodProvider.getDefault())
+
     fun prepareCheckout(items: List<CartItem>) {
-        val selected = if (items.isNotEmpty()) items else cartRepository.clearSelectedItems()
+        val selected = if (items.isNotEmpty()) items else cartRepository.clearSelectedItemsSync()
         checkoutItems.value = selected
         val sub = selected.sumOf { it.price * it.quantity }
         subtotal.value = sub
         recalculateTotal()
+    }
+
+    fun setPaymentMethod(method: PaymentMethod) {
+        selectedPaymentMethod.value = method
     }
 
     fun setShippingOption(type: String, cost: Long) {
@@ -58,6 +66,8 @@ class CheckoutViewModel(application: Application) : AndroidViewModel(application
 
     fun submitOrder() {
         val items = checkoutItems.value ?: emptyList()
+        val method = selectedPaymentMethod.value ?: PaymentMethodProvider.getDefault()
+
         val payload = CheckoutPayload(
             items = items,
             shippingAddress = shippingAddress.value ?: prefManager.userAddress,
@@ -66,7 +76,8 @@ class CheckoutViewModel(application: Application) : AndroidViewModel(application
             shippingCost = shippingCost.value ?: 15000L,
             subtotal = subtotal.value ?: 0L,
             totalAmount = totalAmount.value ?: 0L,
-            paymentMethod = "BCA Virtual Account"
+            paymentMethod = method.name,
+            vaNumber = method.codeOrVa
         )
 
         _orderState.value = Resource.Loading()
@@ -74,16 +85,28 @@ class CheckoutViewModel(application: Application) : AndroidViewModel(application
             val result = orderRepository.createOrder(payload)
             _orderState.value = result
             if (result is Resource.Success) {
-                cartRepository.clearSelectedItems()
+                // Remove ordered items from Cart both locally and in Supabase
+                cartRepository.removeItems(items)
             }
         }
     }
 
-    fun simulatePayment(orderId: String) {
+    fun simulatePayment(orderId: String, items: List<CartItem> = emptyList()) {
         _paymentState.value = Resource.Loading()
         viewModelScope.launch {
             val result = orderRepository.simulatePayment(orderId)
             _paymentState.value = result
+            if (result is Resource.Success) {
+                // Ensure items are cleared from cart
+                if (items.isNotEmpty()) {
+                    cartRepository.removeItems(items)
+                } else {
+                    val order = orderRepository.getLastOrder()
+                    if (order != null && order.items.isNotEmpty()) {
+                        cartRepository.removeItems(order.items)
+                    }
+                }
+            }
         }
     }
 

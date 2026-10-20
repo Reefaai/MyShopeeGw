@@ -19,7 +19,9 @@ data class CheckoutPayload(
     @SerializedName("total_amount")
     val totalAmount: Long,
     @SerializedName("payment_method")
-    val paymentMethod: String = "BCA Virtual Account"
+    val paymentMethod: String = "BCA Virtual Account",
+    @SerializedName("va_number")
+    val vaNumber: String = "123 456 7890"
 ) : Serializable
 
 data class Order(
@@ -41,8 +43,10 @@ data class Order(
     val subtotal: Long = 0L,
     @SerializedName("total_amount")
     val totalAmount: Long = 0L,
+    @SerializedName("payment_method")
+    var paymentMethod: String = "BCA Virtual Account",
     @SerializedName("va_number")
-    val vaNumber: String = "123 456 7890",
+    var vaNumber: String = "123 456 7890",
     @SerializedName("payment_status")
     var paymentStatus: String = "PENDING", // PENDING, PAID
     @SerializedName("tracking_status")
