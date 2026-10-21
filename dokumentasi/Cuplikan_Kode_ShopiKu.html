@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Cuplikan Kode Model & Retrofit API Service (Kotlin) - ShopiKu</title>
+<style>
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background-color: #F8F9FA;
+    margin: 30px;
+    color: #111;
+  }
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    background: #FFFFFF;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  h4 {
+    font-size: 13pt;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+  .code-container {
+    background-color: #F6F8FA;
+    border: 1px solid #D0D7DE;
+    border-left: 5px solid #2EA44F;
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+  }
+  pre {
+    margin: 0;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 10pt;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-all;
+    color: #24292F;
+  }
+  .kwd { color: #CF222E; font-weight: bold; }       /* Kotlin keywords: data, class, val, var, suspend, fun */
+  .ann { color: #8250DF; }                          /* Annotations: @SerializedName, @GET, @POST */
+  .str { color: #0A3069; }                          /* Strings */
+  .num { color: #0550AE; }                          /* Numbers */
+  .typ { color: #953800; }                          /* Types & Classes: Product, CartItem, Response */
+  .com { color: #6E7781; font-style: italic; }      /* Comments */
+  
+  .hint-box {
+    background: #EEF4FF;
+    border-left: 4px solid #1A73E8;
+    padding: 12px 16px;
+    font-size: 10.5pt;
+    color: #333;
+    border-radius: 4px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h4>Cuplikan Kode Model &amp; Retrofit API Service (Kotlin):</h4>
+
+  <div class="code-container">
+<pre><span class="com">// ============================================================================
+// Cuplikan Kode Tunggal: Model Data (DTO) &amp; Layanan Jaringan Supabase PostgREST
+// File: ShopeeApiService.kt &amp; DTO Model ShopiKu (MyShopeeGw)
+// ============================================================================</span>
+
+<span class="com">// 1. DTO Model Produk &amp; Keranjang Belanja</span>
+<span class="kwd">data class</span> <span class="typ">Product</span>(
+    <span class="ann">@SerializedName</span>(<span class="str">"id"</span>) <span class="kwd">val</span> id: <span class="typ">String</span>,
+    <span class="ann">@SerializedName</span>(<span class="str">"name"</span>) <span class="kwd">val</span> name: <span class="typ">String</span>,
+    <span class="ann">@SerializedName</span>(<span class="str">"category"</span>) <span class="kwd">val</span> category: <span class="typ">String</span>,
+    <span class="ann">@SerializedName</span>(<span class="str">"price"</span>) <span class="kwd">val</span> price: <span class="typ">Long</span>,
+    <span class="ann">@SerializedName</span>(<span class="str">"rating"</span>) <span class="kwd">val</span> rating: <span class="typ">Double</span> = <span class="num">5.0</span>
+) : <span class="typ">Serializable</span>
+
+<span class="kwd">data class</span> <span class="typ">CartItem</span>(
+    <span class="ann">@SerializedName</span>(<span class="str">"id"</span>) <span class="kwd">val</span> id: <span class="typ">String</span>,
+    <span class="ann">@SerializedName</span>(<span class="str">"product_id"</span>) <span class="kwd">val</span> productId: <span class="typ">String</span>,
+    <span class="ann">@SerializedName</span>(<span class="str">"product_name"</span>) <span class="kwd">val</span> productName: <span class="typ">String</span>,
+    <span class="ann">@SerializedName</span>(<span class="str">"price"</span>) <span class="kwd">val</span> price: <span class="typ">Long</span>,
+    <span class="ann">@SerializedName</span>(<span class="str">"quantity"</span>) <span class="kwd">var</span> quantity: <span class="typ">Int</span> = <span class="num">1</span>,
+    <span class="ann">@SerializedName</span>(<span class="str">"variant"</span>) <span class="kwd">val</span> variant: <span class="typ">String</span> = <span class="str">""</span>,
+    <span class="ann">@Transient</span> <span class="kwd">var</span> isSelected: <span class="typ">Boolean</span> = <span class="kwd">true</span> <span class="com">// Local UI state (tidak dikirim ke database Supabase)</span>
+) : <span class="typ">Serializable</span>
+
+<span class="com">// 2. Interface Retrofit Service Penghubung 7 Alur Transaksi ke Cloud Supabase</span>
+<span class="kwd">interface</span> <span class="typ">SupabaseApiService</span> {
+
+    <span class="com">// Alur 1 &amp; 2: Katalog Produk &amp; Pencarian Cepat</span>
+    <span class="ann">@GET</span>(<span class="str">"rest/v1/products?select=*"</span>)
+    <span class="kwd">suspend fun</span> getProducts(<span class="ann">@Query</span>(<span class="str">"name"</span>) searchFilter: <span class="typ">String</span>? = <span class="kwd">null</span>): <span class="typ">Response</span>&lt;<span class="typ">List</span>&lt;<span class="typ">Product</span>&gt;&gt;
+
+    <span class="com">// Alur 4: Mengambil &amp; Menambahkan Produk ke Keranjang Belanja</span>
+    <span class="ann">@GET</span>(<span class="str">"rest/v1/cart?select=*"</span>)
+    <span class="kwd">suspend fun</span> getCart(): <span class="typ">Response</span>&lt;<span class="typ">List</span>&lt;<span class="typ">CartItem</span>&gt;&gt;
+
+    <span class="ann">@Headers</span>(<span class="str">"Prefer: return=representation"</span>)
+    <span class="ann">@POST</span>(<span class="str">"rest/v1/cart"</span>)
+    <span class="kwd">suspend fun</span> addToCart(<span class="ann">@Body</span> item: <span class="typ">CartItem</span>): <span class="typ">Response</span>&lt;<span class="typ">List</span>&lt;<span class="typ">CartItem</span>&gt;&gt;
+
+    <span class="com">// Alur 5: Mengubah Kuantitas (+/-) &amp; Menghapus Item Keranjang (CRUD)</span>
+    <span class="ann">@Headers</span>(<span class="str">"Prefer: return=representation"</span>)
+    <span class="ann">@PATCH</span>(<span class="str">"rest/v1/cart"</span>)
+    <span class="kwd">suspend fun</span> updateCartQuantity(<span class="ann">@Query</span>(<span class="str">"id"</span>) idFilter: <span class="typ">String</span>, <span class="ann">@Body</span> body: <span class="typ">Map</span>&lt;<span class="typ">String</span>, <span class="typ">Int</span>&gt;): <span class="typ">Response</span>&lt;<span class="typ">List</span>&lt;<span class="typ">CartItem</span>&gt;&gt;
+
+    <span class="ann">@DELETE</span>(<span class="str">"rest/v1/cart"</span>)
+    <span class="kwd">suspend fun</span> deleteCartItem(<span class="ann">@Query</span>(<span class="str">"id"</span>) idFilter: <span class="typ">String</span>): <span class="typ">Response</span>&lt;<span class="typ">Void</span>&gt;
+
+    <span class="com">// Alur 6 &amp; 7: Menerbitkan Pesanan Checkout &amp; Verifikasi Status Pembayaran</span>
+    <span class="ann">@Headers</span>(<span class="str">"Prefer: return=representation"</span>)
+    <span class="ann">@POST</span>(<span class="str">"rest/v1/orders"</span>)
+    <span class="kwd">suspend fun</span> createOrder(<span class="ann">@Body</span> order: <span class="typ">Map</span>&lt;<span class="typ">String</span>, <span class="typ">Any</span>&gt;): <span class="typ">Response</span>&lt;<span class="typ">List</span>&lt;<span class="typ">Map</span>&lt;<span class="typ">String</span>, <span class="typ">Any</span>&gt;&gt;&gt;
+
+    <span class="ann">@Headers</span>(<span class="str">"Prefer: return=representation"</span>)
+    <span class="ann">@PATCH</span>(<span class="str">"rest/v1/orders"</span>)
+    <span class="kwd">suspend fun</span> updateOrder(<span class="ann">@Query</span>(<span class="str">"id"</span>) idFilter: <span class="typ">String</span>, <span class="ann">@Body</span> body: <span class="typ">Map</span>&lt;<span class="typ">String</span>, <span class="typ">Any</span>&gt;): <span class="typ">Response</span>&lt;<span class="typ">List</span>&lt;<span class="typ">Map</span>&lt;<span class="typ">String</span>, <span class="typ">Any</span>&gt;&gt;&gt;
+}
+</pre>
+  </div>
+
+  <div class="hint-box">
+    💡 <strong>Cara Memasukkan ke Microsoft Word:</strong><br>
+    <strong>Metode 1:</strong> Buka file <code>dokumentasi/Cuplikan_Kode_ShopiKu.docx</code> di Word, lalu langsung copy-paste kotak kodenya ke laporan.<br>
+    <strong>Metode 2:</strong> Buka file HTML ini di browser (Chrome/Edge), blok seluruh kotak kode abu-abu di atas, tekan <code>Ctrl + C</code>, lalu <code>Ctrl + V</code> di Word. Word akan langsung menampilkan kotak skrip kode program yang rapi dengan warna syntax highlighting asli!
+  </div>
+</div>
+</body>
+</html>
